@@ -18,7 +18,7 @@ Fork this project and clone it to your local machine.
 
 Dependencies are managed with [Swift Package Manager](https://developer.apple.com/documentation/swift_packages). After opening Xcode, you should see it resolving dependencies.
 
-You will need a [Personal Access Token for GitHub]((https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)) to run the project. Update the variable `kGitHubBearerToken` in the **Networking/ApolloClient.swift**.
+You will need a [Personal Access Token for GitHub](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) to run the project. Update the variable `kGitHubBearerToken` in the **Networking/ApolloClient.swift**.
 
 ### Dependencies
 You are allowed to use 3rd party libraries as dependencies, but you should explain somewhere what problem(s) they solve and why you selected the specific library you did.
