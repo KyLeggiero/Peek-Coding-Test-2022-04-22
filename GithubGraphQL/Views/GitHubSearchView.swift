@@ -28,16 +28,24 @@ struct GitHubSearchView: View {
     
     var body: some View {
         Group {
-            switch phase {
-            case .searching:
-                Text("Searching for \(query)")
-                
-            case .idle:
-                if let currentResults = currentResults {
-                    Text("Found \(currentResults.repos.count)")
+            if !query.isEmpty,
+               let currentResults = currentResults {
+                SearchResultsView(results: currentResults) {
+                    continueSearch(previousResults: currentResults)
                 }
-                else {
+            }
+            else {
+                switch phase {
+                case .searching:
+                    Text("Searching for \(query)")
+                        .onAppear {
+                            print("ℹ️", query, currentResults?.repos.count ?? -1)
+                        }
+                    
+                case .idle:
                     Text("Type a search in the text field")
+                        .bold()
+                        .foregroundColor(.secondary)
                 }
             }
         }
@@ -46,20 +54,24 @@ struct GitHubSearchView: View {
         
         
         .onChange(of: query) { newQuery in
-            searchPublisher = GitHubSearchEngine.search(for: query)
+            if query.isEmpty {
+                currentResults = nil
+            }
+            else {
+                newSearch()
+            }
         }
+        
         
         .onReceive(searchPublisher) { result in
             switch result {
             case .notStarted:
-                currentResults = nil
                 phase = .idle
                 
             case .searching:
-                currentResults = nil
                 phase = .searching
                 
-            case .complete(results: let results):
+            case .complete(allResults: let results):
                 currentResults = results
                 phase = .idle
                 
@@ -70,6 +82,24 @@ struct GitHubSearchView: View {
                 // TODO: Display error
             }
         }
+        
+        
+        .onAppear {
+            query = "graphql"
+        }
+    }
+}
+
+
+
+private extension GitHubSearchView {
+    func newSearch() {
+        searchPublisher = GitHubSearchEngine.search(for: query)
+    }
+    
+    
+    func continueSearch(previousResults: GitHubSearchEngine.Results) {
+        searchPublisher = GitHubSearchEngine.continueSearch(for: query, appendingTo: previousResults)
     }
 }
 

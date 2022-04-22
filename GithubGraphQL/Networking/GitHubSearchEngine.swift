@@ -22,42 +22,73 @@ enum GitHubSearchEngine {
 // MARK: - Search function
 
 extension GitHubSearchEngine {
-    static func search(for phrase: String) -> ResultsPublisher {
+    static func search(for query: String, newPageStartCursor: Cursor? = nil) -> ResultsPublisher {
         
         let publisher = CurrentValueSubject<SearchProgress, Never>(.notStarted)
         
-        ApolloClient.gitHubSearch.searchRepositories(mentioning: phrase) { response in
+        ApolloClient.gitHubSearch.searchRepositories(
+            mentioning: query,
+            filter: newPageStartCursor.map { .after($0) })
+        { response in
             switch response {
             case let .failure(error):
                 publisher.send(.failed(cause: error))
                 publisher.send(completion: .finished)
                 
             case let .success(results):
-                publisher.send(.complete(results: results))
+                publisher.send(.complete(allResults: results))
                 publisher.send(completion: .finished)
                 
-                let pageInfo = results.pageInfo
-                print("pageInfo: \n")
-                print("hasNextPage: \(pageInfo.hasNextPage)")
-                print("hasPreviousPage: \(pageInfo.hasPreviousPage)")
-                print("startCursor: \(pageInfo.startCursor ?? "none")")
-                print("endCursor: \(pageInfo.endCursor ?? "none")")
-                print("\n")
-                
-                results.repos.forEach { repository in
-                    print("Name: \(repository.name)")
-                    print("Path: \(repository.url)")
-                    print("Owner: \(repository.owner.login)")
-                    print("avatar: \(repository.owner.avatarUrl)")
-                    print("Stars: \(repository.stargazers.totalCount)")
-                    print("\n")
-                }
+//                let pageInfo = results.pageInfo
+//                print("pageInfo: \n")
+//                print("hasNextPage: \(pageInfo.hasNextPage)")
+//                print("hasPreviousPage: \(pageInfo.hasPreviousPage)")
+//                print("startCursor: \(pageInfo.startCursor ?? "none")")
+//                print("endCursor: \(pageInfo.endCursor ?? "none")")
+//                print("\n")
+//                
+//                results.repos.forEach { repository in
+//                    print("Name: \(repository.name)")
+//                    print("Path: \(repository.url)")
+//                    print("Owner: \(repository.owner.login)")
+//                    print("avatar: \(repository.owner.avatarUrl)")
+//                    print("Stars: \(repository.stargazers.totalCount)")
+//                    print("\n")
+//                }
             }
         }
         
-        publisher.send(.searching)
+        publisher.send(.searching())
         
         return publisher.eraseToAnyPublisher()
+    }
+    
+    
+    static func continueSearch(for query: String, appendingTo previousResults: Results) -> ResultsPublisher {
+        
+        guard let cursor = previousResults.pageInfo.endCursor.map({ Cursor(rawValue: $0) }) else {
+            return Just(.complete(allResults: previousResults))
+                .eraseToAnyPublisher()
+        }
+        
+        return search(for: query, newPageStartCursor: cursor)
+            .map { searchProgress -> SearchProgress in
+                switch searchProgress {
+                case .notStarted,
+                        .searching(previousResults: _):
+                    return .searching(previousResults: previousResults)
+                    
+                case .complete(allResults: let newResults):
+                    return .complete(allResults: .init(
+                        pageInfo: newResults.pageInfo,
+                        repos: previousResults.repos + newResults.repos
+                    ))
+                    
+                case .failed(cause: _):
+                    return searchProgress
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
     
@@ -68,8 +99,8 @@ extension GitHubSearchEngine {
     
     enum SearchProgress {
         case notStarted
-        case searching
-        case complete(results: Results)
+        case searching(previousResults: Results? = nil)
+        case complete(allResults: Results)
         case failed(cause: Error)
     }
     

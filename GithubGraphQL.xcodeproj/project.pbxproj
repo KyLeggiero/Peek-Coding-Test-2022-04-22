@@ -11,6 +11,7 @@
 		B9C445602813367300218E3B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C4455F2813367300218E3B /* ContentView.swift */; };
 		B9C44564281337C700218E3B /* GitHubSearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C44563281337C700218E3B /* GitHubSearchEngine.swift */; };
 		B9C4456728133AF400218E3B /* GitHubSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C4456628133AF400218E3B /* GitHubSearchView.swift */; };
+		B9C4456C2813458E00218E3B /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C4456B2813458E00218E3B /* SearchResultsView.swift */; };
 		D806B6B527C71F1C006F594D /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = D806B6B427C71F1C006F594D /* Apollo */; };
 		D806B6B727C71F1C006F594D /* ApolloSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = D806B6B627C71F1C006F594D /* ApolloSQLite */; };
 		D84E7B1127C81B88000DEB5B /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84E7B1027C81B88000DEB5B /* MockData.swift */; };
@@ -50,6 +51,7 @@
 		B9C4455F2813367300218E3B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B9C44563281337C700218E3B /* GitHubSearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSearchEngine.swift; sourceTree = "<group>"; };
 		B9C4456628133AF400218E3B /* GitHubSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSearchView.swift; sourceTree = "<group>"; };
+		B9C4456B2813458E00218E3B /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
 		D84E7B1027C81B88000DEB5B /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		D8F7604A27C724F900B1AB58 /* API+Abstractions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "API+Abstractions.swift"; sourceTree = "<group>"; };
 		D8F7604C27C7295500B1AB58 /* GraphQLClient+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GraphQLClient+Search.swift"; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 			children = (
 				B9C4455F2813367300218E3B /* ContentView.swift */,
 				B9C4456628133AF400218E3B /* GitHubSearchView.swift */,
+				B9C4456B2813458E00218E3B /* SearchResultsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -367,6 +370,7 @@
 				B9C445602813367300218E3B /* ContentView.swift in Sources */,
 				D8F7604B27C724F900B1AB58 /* API+Abstractions.swift in Sources */,
 				B9C44564281337C700218E3B /* GitHubSearchEngine.swift in Sources */,
+				B9C4456C2813458E00218E3B /* SearchResultsView.swift in Sources */,
 				B9C4456728133AF400218E3B /* GitHubSearchView.swift in Sources */,
 				D9A10FA0216C4AFD007998EC /* App.swift in Sources */,
 			);
