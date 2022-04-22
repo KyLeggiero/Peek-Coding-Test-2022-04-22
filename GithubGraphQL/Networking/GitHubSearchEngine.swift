@@ -129,7 +129,7 @@ extension ApolloClient {
         networkTransport: RequestChainNetworkTransport(
             interceptorProvider: DefaultInterceptorProvider(store: .gitHubCacheLocal),
             endpointURL: URL(string: "https://api.github.com/graphql")!,
-            additionalHeaders: ["Authorization": "Bearer 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"]
+            additionalHeaders: ["Authorization": "Bearer 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"]
         ),
         store: .gitHubCacheLocal
     )

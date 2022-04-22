@@ -25,30 +25,13 @@ struct GitHubSearchView: View {
     @State
     private var searchPublisher: GitHubSearchEngine.ResultsPublisher = .notStarted
     
+    @State
+    private var currentError: (error: Error?, presentErrorDialog: Bool) = (nil, false)
+    
     
     var body: some View {
-        Group {
-            if !query.isEmpty,
-               let currentResults = currentResults {
-                SearchResultsView(results: currentResults) {
-                    continueSearch(previousResults: currentResults)
-                }
-            }
-            else {
-                switch phase {
-                case .searching:
-                    Text("Searching for \(query)")
-                        .onAppear {
-                            print("ℹ️", query, currentResults?.repos.count ?? -1)
-                        }
-                    
-                case .idle:
-                    Text("Type a search in the text field")
-                        .bold()
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
+        content
+        
         .searchable(text: $query)
         .navigationTitle("GitHub Search")
         
@@ -56,6 +39,7 @@ struct GitHubSearchView: View {
         .onChange(of: query) { newQuery in
             if query.isEmpty {
                 currentResults = nil
+                clearError()
             }
             else {
                 newSearch()
@@ -74,18 +58,63 @@ struct GitHubSearchView: View {
             case .complete(allResults: let results):
                 currentResults = results
                 phase = .idle
+                clearError()
                 
             case .failed(cause: let cause):
                 currentResults = nil
                 phase = .idle
                 print(cause)
-                // TODO: Display error
+                handle(error: cause)
             }
         }
         
         
         .onAppear {
             query = "graphql"
+        }
+    }
+}
+
+
+
+private extension GitHubSearchView {
+    
+    @ViewBuilder
+    var content: some View {
+        if let error = currentError.error {
+            VStack {
+                Text("An error occurred while searching")
+                    .bold()
+                    .foregroundColor(.red)
+                
+                Button("More info") {
+                    currentError.presentErrorDialog = true
+                }
+                .popover(isPresented: $currentError.presentErrorDialog) {
+                    Text(error.localizedDescription)
+                        .padding()
+                        .lineLimit(nil)
+                }
+            }
+        }
+        else {
+            if !query.isEmpty,
+               let currentResults = currentResults {
+                SearchResultsView(results: currentResults) {
+                    continueSearch(previousResults: currentResults)
+                }
+            }
+            else {
+                switch phase {
+                case .searching:
+                    Text("Searching for \(query)")
+                    
+                case .idle:
+                    Text("Type a search in the text field")
+                        .bold()
+                        .foregroundColor(.secondary)
+                }
+            }
         }
     }
 }
@@ -100,6 +129,16 @@ private extension GitHubSearchView {
     
     func continueSearch(previousResults: GitHubSearchEngine.Results) {
         searchPublisher = GitHubSearchEngine.continueSearch(for: query, appendingTo: previousResults)
+    }
+    
+    
+    func clearError() {
+        currentError = (error: nil, presentErrorDialog: false)
+    }
+    
+    
+    func handle(error: Error) {
+        currentError = (error: error, presentErrorDialog: false)
     }
 }
 
