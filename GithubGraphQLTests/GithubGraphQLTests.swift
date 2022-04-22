@@ -1,5 +1,12 @@
 @testable import GithubGraphQL
+import Combine
 import XCTest
+
+
+
+private var testPublishers = Set<AnyCancellable>()
+
+
 
 class GithubGraphQLTests: XCTestCase {
 
@@ -14,20 +21,41 @@ class GithubGraphQLTests: XCTestCase {
     }
 
     func testExample() {
-      let mockedResponse = SearchRepositoriesQuery.Data(search: .init(
-        pageInfo: .init(startCursor: "startCursor", endCursor: nil, hasNextPage: false, hasPreviousPage: false),
-        edges: makeEdges(count: 3)
-      ))
-      let viewModel = ViewModel(client: MockGraphQLClient<SearchRepositoriesQuery>(response: mockedResponse))
-
-      /* add assertions to validate view model state after making requests */
+        let mockedResponse = SearchRepositoriesQuery.Data(search: .init(
+            pageInfo: .init(startCursor: "startCursor", endCursor: nil, hasNextPage: false, hasPreviousPage: false),
+            edges: makeEdges(count: 3)
+        ))
+        
+        let expectation = self.expectation(description: "Search Complete")
+        
+        GitHubSearchEngine.search(for: "what", client: MockGraphQLClient<SearchRepositoriesQuery>(response: mockedResponse))
+            .sink { completion in
+                switch completion {
+                case .failure(_):
+                    XCTFail("This should never fail")
+                    
+                case .finished:
+                    expectation.fulfill()
+                }
+            }
+            receiveValue: { progress in
+                switch progress {
+                case .notStarted:
+                    break
+                    
+                case .searching(previousResults: let previousResults):
+                    XCTAssertNil(previousResults)
+                    
+                case .complete(allResults: let allResults):
+                    print(allResults)
+                    break
+                    
+                case .failed(cause: let cause):
+                    XCTFail(cause.localizedDescription)
+                }
+            }
+            .store(in: &testPublishers)
+        
+        wait(for: [expectation], timeout: 5)
     }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }

@@ -30,4 +30,12 @@ GitHub deleted the PAT I made because I committed my code which contained it. Sa
 
 
 
+## Testing ##
+
+Because of my initial modifications, it no longer makes sense to unit test the view model, as it has no behavior. I changed the test to reference the search engine I created, and tested that.
+
+Given more time, I might also extensively test all reasonable and edge values for the search filter and other such arguments. 
+
+
+
 [Ky]: https://KyLeggiero.me

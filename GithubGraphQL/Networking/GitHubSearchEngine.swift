@@ -22,11 +22,13 @@ enum GitHubSearchEngine {
 // MARK: - Search function
 
 extension GitHubSearchEngine {
-    static func search(for query: String, newPageStartCursor: Cursor? = nil) -> ResultsPublisher {
+    static func search(for query: String, client: GraphQLClient = .gitHubSearch, newPageStartCursor: Cursor? = nil) -> ResultsPublisher {
         
         let publisher = CurrentValueSubject<SearchProgress, Never>(.notStarted)
         
-        ApolloClient.gitHubSearch.searchRepositories(
+        publisher.send(.searching())
+        
+        client.searchRepositories(
             mentioning: query,
             filter: newPageStartCursor.map { .after($0) })
         { response in
@@ -57,8 +59,6 @@ extension GitHubSearchEngine {
 //                }
             }
         }
-        
-        publisher.send(.searching())
         
         return publisher.eraseToAnyPublisher()
     }
@@ -124,13 +124,15 @@ private extension ApolloStore {
     static let gitHubCacheLocal = ApolloStore(cache: .local(subfolder: "github.cache"))
 }
 
-extension ApolloClient {
-    static let gitHubSearch = ApolloClient(
-        networkTransport: RequestChainNetworkTransport(
-            interceptorProvider: DefaultInterceptorProvider(store: .gitHubCacheLocal),
-            endpointURL: URL(string: "https://api.github.com/graphql")!,
-            additionalHeaders: ["Authorization": "Bearer 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"]
-        ),
-        store: .gitHubCacheLocal
-    )
+extension GraphQLClient where Self == ApolloClient {
+    static var gitHubSearch: Self {
+        ApolloClient(
+            networkTransport: RequestChainNetworkTransport(
+                interceptorProvider: DefaultInterceptorProvider(store: .gitHubCacheLocal),
+                endpointURL: URL(string: "https://api.github.com/graphql")!,
+                additionalHeaders: ["Authorization": "Bearer INSERT_TOKEN_HERE"]
+            ),
+            store: .gitHubCacheLocal
+        )
+    }
 }
