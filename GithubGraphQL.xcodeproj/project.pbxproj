@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B9C4455E281331CB00218E3B /* README (Ky's Notes).md in Resources */ = {isa = PBXBuildFile; fileRef = B9C4455D281331CB00218E3B /* README (Ky's Notes).md */; };
 		D806B6B527C71F1C006F594D /* Apollo in Frameworks */ = {isa = PBXBuildFile; productRef = D806B6B427C71F1C006F594D /* Apollo */; };
 		D806B6B727C71F1C006F594D /* ApolloSQLite in Frameworks */ = {isa = PBXBuildFile; productRef = D806B6B627C71F1C006F594D /* ApolloSQLite */; };
 		D84E7B1127C81B88000DEB5B /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84E7B1027C81B88000DEB5B /* MockData.swift */; };
@@ -46,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B9C4455D281331CB00218E3B /* README (Ky's Notes).md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "README (Ky's Notes).md"; sourceTree = "<group>"; };
 		D84E7B1027C81B88000DEB5B /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		D8F7604A27C724F900B1AB58 /* API+Abstractions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "API+Abstractions.swift"; sourceTree = "<group>"; };
 		D8F7604C27C7295500B1AB58 /* GraphQLClient+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GraphQLClient+Search.swift"; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 		D9A10F93216C4AFD007998EC = {
 			isa = PBXGroup;
 			children = (
+				B9C4455D281331CB00218E3B /* README (Ky's Notes).md */,
 				D9A10F9E216C4AFD007998EC /* GithubGraphQL */,
 				D9A10FB3216C4AFE007998EC /* GithubGraphQLTests */,
 				D9A10FBE216C4AFE007998EC /* GithubGraphQLUITests */,
@@ -296,6 +299,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9A10FAA216C4AFD007998EC /* LaunchScreen.storyboard in Resources */,
+				B9C4455E281331CB00218E3B /* README (Ky's Notes).md in Resources */,
 				D9A10FA7216C4AFD007998EC /* Assets.xcassets in Resources */,
 				D9A10FEB216C77CD007998EC /* Queries.graphql in Resources */,
 				D9C8E126216DB958002A64FC /* schema.json in Resources */,
